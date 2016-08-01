@@ -1,0 +1,17 @@
+{
+  "name": "remember",
+  "version": "1.0.0",
+  "description": "Remember is a prototype",
+  "main": "remember.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gtosta96/Remember"
+  },
+  "author": "Gabriel Tosta",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "devtool": "^2.0.3",
+    "http-proxy": "^1.14.0",
+    "nodemon": "^1.10.0"
+  }
+}
