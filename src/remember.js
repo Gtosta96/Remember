@@ -2,39 +2,27 @@
 	'use strict';
 
 	//core imports
+	var http = require('http');
+	var httpProxy = require('http-proxy');
 	var express = require('express');
 	var app = express();
-	var httpProxy = require('http-proxy');
 
 	//custom imports
 	var utils = require('./remember-utils');
+	const PROPERTIES = require('./remember-properties');
 
-	const PROPERTIES = {
-		target: 'localhost',
-		serverTarget: 9000,
-		proxyPort: 8000,
-		get proxyUrl() {
-			return {
-				target: 'http://' + this.target + ':' + this.serverTarget
-			}
-		}
-	}
-	var proxy = httpProxy.createProxyServer(PROPERTIES.proxyUrl).listen(PROPERTIES.proxyPort);
+	var proxy = httpProxy.createProxyServer(PROPERTIES.serverUrl).listen(PROPERTIES.proxyPort);
 
-	app.get('*', function appGetCallback(req, res) {
-		doProxy(req, res);
+	app.get('*', function(req, res) {
+		res.send('Hello World');
+		var utilsURL = utils.URL(req, res);
+
+		var urlDetails = utilsURL.getUrlDetails();
+		console.log(urlDetails);
 	});
 
-	app.listen(PROPERTIES.serverTarget, function appListenCallback() {
-		console.log('Server is Running on [%s]', PROPERTIES.proxyUrl.target);
+	app.listen(PROPERTIES.serverPort, function appListenCallback() {
+		console.log('Server is Running on [%s]', PROPERTIES.serverUrl.target);
 		console.log('Proxy is Running on port:[%s]', PROPERTIES.proxyPort);
-	}).close();
-
-	/*
-	* Commons Functions
-	*/
-	function doProxy(req, res) {
-		var target = utils.URL(req).getTarget;
-		proxy.web(req, res, target);
-	}
+	});
 }());

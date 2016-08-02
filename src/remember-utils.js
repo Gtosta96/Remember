@@ -10,17 +10,22 @@
 
 	module.exports = rememberUtils;
 
-	function URL(req) {
-			var urlObject = {
-				protocol: req.protocol,
-				host: req.get('host'),
-				pathname: req.originalUrl
-			};
-			var fullUrl = url.format(urlObject);
+	function URL(req, res) {
+			var getUrlDetails = function(urlQuery, parseQueryString) {
+				if(urlQuery)
+					return url.parse(urlQuery, parseQueryString);
+				else
+					return url.parse(req.url, parseQueryString);
+			}
+
+			var notFound = function() {
+				res.writeHead(404, 'text/plain');
+				res.end('404, File not found');
+			}
 			
 			return {
-				getFullUrl: fullUrl,
-				getTarget: {target: fullUrl}
+				getUrlDetails: getUrlDetails,
+				notFound: notFound
 			}
 		}
 }());
