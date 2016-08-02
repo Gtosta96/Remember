@@ -5,18 +5,22 @@
 	var url = require('url');
 
 	var rememberUtils = {
-		getFullUrl: getFullUrl
+		URL: URL
 	}
 
 	module.exports = rememberUtils;
 
-	function getFullUrl(req) {
+	function URL(req) {
 			var urlObject = {
 				protocol: req.protocol,
 				host: req.get('host'),
 				pathname: req.originalUrl
 			};
+			var fullUrl = url.format(urlObject);
 			
-			return url.format(urlObject);
+			return {
+				getFullUrl: fullUrl,
+				getTarget: {target: fullUrl}
+			}
 		}
 }());

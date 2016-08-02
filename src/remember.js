@@ -21,19 +21,20 @@
 	}
 	var proxy = httpProxy.createProxyServer(PROPERTIES.proxyUrl).listen(PROPERTIES.proxyPort);
 
-	proxy.on('proxyReq', function(proxyReq, req, res, options) {
-  		proxyReq.setHeader('X-Special-Proxy-Header', 'foobar');
+	app.get('*', function appGetCallback(req, res) {
+		doProxy(req, res);
 	});
 
-	var lastUrl;
-	app.get('*', function (req, res) {
-		var url = utils.getFullUrl(req);
+	app.listen(PROPERTIES.serverTarget, function appListenCallback() {
+		console.log('Server is Running on [%s]', PROPERTIES.proxyUrl.target);
+		console.log('Proxy is Running on port:[%s]', PROPERTIES.proxyPort);
+	}).close();
 
-		res.redirect(url);
-		res.end();
-	});
-
-	app.listen(PROPERTIES.serverTarget, function() {
-		console.log('Server Running...');
-	});
+	/*
+	* Commons Functions
+	*/
+	function doProxy(req, res) {
+		var target = utils.URL(req).getTarget;
+		proxy.web(req, res, target);
+	}
 }());
